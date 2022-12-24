@@ -1,1 +1,70 @@
+=========================Access/Connect aws cloud Instances from On-promies Env===============================================================
+Let's take one scenerio: In our secenrio, EC2 Instance is hosted in "North Virginia" aws region and client location/site is "Mumbai". Now Instance can be access through
+VPN Connection from client site.
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Start the Labs:
+
+1. Create one VPC and Internet Gateway in N. Virginia and Internet Gateway and one in Mumbai. IG must be attached through VPC repestively.
+2. Create Route Tables (N. Virginia & Mumbai) and the rules repesctively
+3. Create a EC2 Linux machine with Public IP in Mumbai VPC.
+
+4. Go to N. Virginia Region:
+  a. Create VPN Gateway and put the public IP of Mumbai's EC2 Instance
+  b. Create a Customer Endpoint.
+  b. create a site-to-site connection and add the subnet of customer end point (Subnet IP should be different from N. Virginia Subnet IP)
+  c. Now go to route table->Router Propogation->Add the check the checkbox
+  d. Download the Configuration File
+
+5. Go to Mumbai Region:
+
+Login in EC2 Machine and follow below steps:
+
+  A.  Commands for Installation of Openswan
+    i. Change to root user: 
+                $ sudo su
+    ii. Install openswan:
+                $ yum install openswan -y
+                
+    iii. In /etc/ipsec.conf uncomment following line if not already 
+          uncommented:
+                 include /etc/ipsec.d/*.conf
+                 
+    iv. Update /etc/sysctl.conf to have following
+          net.ipv4.ip_forward = 1
+          net.ipv4.conf.all.accept_redirects = 0
+          net.ipv4.conf.all.send_redirects = 0
+ 
+    v. Restart network service:
+                 $ service network restart
+
+  B. Command for /etc/ipsec.d/aws-vpn.conf
+conn Tunnel1
+        authby=secret
+        auto=start
+        left=%defaultroute
+        leftid=Customer end Gateway VPN public IP
+        right=AWS Virtual private gateway ID- public IP
+        type=tunnel
+        ikelifetime=8h
+        keylife=1h
+        phase2alg=aes128-sha1;modp1024
+        ike=aes128-sha1;modp1024
+        keyingtries=%forever
+        keyexchange=ike
+        leftsubnet=Customer end VPN CIDR
+        rightsubnet=AWS end VPN CIDR
+        dpddelay=10
+        dpdtimeout=30
+        dpdaction=restart_by_peer
+
+  C. Contents for  /etc/ipsec.d/aws-vpn.secrets
+        customer_public_ip aws_vgw_public_ip: PSK "shared secret"
+
+  D. Commands to enable/start ipsec service
+           $ chkconfig ipsec on
+           $ service ipsec start
+           $ service ipsec status
+
+END .....................
