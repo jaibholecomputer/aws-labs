@@ -6,7 +6,7 @@ VPN Connection from client site.
 
 Start the Labs:
 
-1. Create one VPC and Internet Gateway in N. Virginia and Internet Gateway and one in Mumbai. IG must be attached through VPC repestively.
+1. Create (1-1)VPC, Subnet and Internet Gateway in N. Virginia and in Mumbai. Attach IG with VPC repestively.
 2. Create Route Tables (N. Virginia & Mumbai) and the rules repesctively
 3. Create a EC2 Linux machine with Public IP in Mumbai VPC.
 
