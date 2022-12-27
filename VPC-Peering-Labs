@@ -1,1 +1,45 @@
+Agenda: To enable VPC pering between TWO VPC in same region and cross region.
+
+1. VPC Peering in SAME REGION:
+
+Steps -1: 
+a. Create TWO VPC in SAME Region
+b. Create Subnet in each VPC.
+c. Create Internet Gateway in each VPC
+d. Create Route Table in each VPC.
+e. Create EC2 Instance in each VPC
+
+Steps - 2:
+a. Go to peering connection
+b. give the name of connection
+c. select requestor VPC
+d. select accecpter VPC
+e. Click on create
+f. Click on actions and accept the request.
+g. Go to route table of each VPC (mumbai) and add the CIDR of another vpc,  select peering connection. Perform same action in another vpc route table.
+h. Login in one Instance and ping another one by using private ip.
+i. if ping is working the vpc peering working.
+
+
+2. VPC Peering in Cross Region:
+
+Steps - 1:
+a. Create TWO VPC in each Region
+b. Create Subnet in each VPC.
+c. Create Internet Gateway in each VPC
+d. Create Route Table in each VPC.
+e. Create EC2 Instance in each VPC.
+
+Steps - 2:
+Steps - 2:
+a. Go to peering connection
+b. give the name of connection
+c. select requestor VPC
+d. click on 'another region' and selet 'the region' of another VPC (accepter), put the VPC ID.
+e. Click on create.
+f. Go to another region (accecpter side). Click on actions and accept the request.
+g. Go to route table of VPC and add the CIDR of another vpc,  select peering connection. Perform same action in another vpc's route table.
+h. Login in one Instance and ping another one by using private ip.
+i. if ping is working the vpc peering working.
+
 
